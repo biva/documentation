@@ -8,27 +8,32 @@ This document explains how to install OnlyOffice on the same server as Nextcloud
 * OnlyOffice (Docker version, Document Server only) behind a proxy
 * Let's encrypt for everything
 
-1. Required specifications
-Apache2
-A working Nextcloud Instance with SSL
-Docker installed (see https://docs.docker.com/engine/install/)
-Let's encrypt (certbot) installed (see https://certbot.eff.org/instructions)
+Required specifications
+------------------
+- Apache2
+- A working Nextcloud Instance with SSL
+- Docker installed (see https://docs.docker.com/engine/install/)
+- Let's encrypt (certbot) installed (see https://certbot.eff.org/instructions)
 
-The examples below are working for Debian 10 Buster. Some modifications might be required for a different system. The URL in this example are:
-- Nextcloud: nextcloud.mydomain.com
-- OnlyOffice: office.mydomain.com
+The examples below are working for Debian 10 Buster. Some modifications might be required for a different system. The URL used in this example are:
 
-2. Set Apache and DNS
+* Nextcloud: nextcloud.mydomain.com
+* OnlyOffice: office.mydomain.com
+
+Set up Apache and DNS
+---------------------
+
 Enable the required Apache modules:
-
+::
     a2enmod proxy
     a2enmod proxy_wstunnel
     a2enmod proxy_http
     a2enmod headers
 
-Create the virtual host for office.mydomain.com
-sudo nano /etc/apache2/sites-available/office.conf
-Add:
+Create the virtual host for `office.mydomain.com`
+`sudo nano /etc/apache2/sites-available/office.conf`
+Add the following lines in this file:
+::
 <VirtualHost *:80>
 ServerName office.mydomain.com
 
@@ -39,11 +44,14 @@ RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
 </VirtualHost>
 
 Enable this virtual host:
+::
     a2ensite office.conf
     service apache2 reload
 
 Create the SSL version with certbot:
-sudo certbot --apache -d office.mydomain.com
+
+`sudo certbot --apache -d office.mydomain.com
+
 This will automatically create /etc/apache2/sites-available/office-le-ssl.conf. Edit this file
 sudo nano /etc/apache2/sites-available/office-le-ssl.conf
 And add, at the end of the <VirtualHost> section:

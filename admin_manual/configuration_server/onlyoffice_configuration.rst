@@ -3,10 +3,11 @@ OnlyOffice on the same server as Nextcloud
 ==========================================
  
 This document explains how to install OnlyOffice on the same server as Nextcloud, with this configuration
-* Debian/Apache
-* Nextcloud
-* OnlyOffice (Docker version, Document Server only) behind a proxy
-* Let's encrypt for everything
+
+- Debian/Apache
+- Nextcloud
+- OnlyOffice (Docker version, Document Server only) behind a proxy
+- Let's encrypt for everything
 
 Required specifications
 ------------------
@@ -17,58 +18,79 @@ Required specifications
 
 The examples below are working for Debian 10 Buster. Some modifications might be required for a different system. The URL used in this example are:
 
-* Nextcloud: nextcloud.mydomain.com
-* OnlyOffice: office.mydomain.com
+- Nextcloud: nextcloud.mydomain.com
+- OnlyOffice: office.mydomain.com
 
 Set up Apache and DNS
 ---------------------
 
 Enable the required Apache modules:
+
 ::
+
     a2enmod proxy
     a2enmod proxy_wstunnel
     a2enmod proxy_http
     a2enmod headers
 
-Create the virtual host for `office.mydomain.com`
-`sudo nano /etc/apache2/sites-available/office.conf`
+Create the virtual host for **office.mydomain.com**
+
+::
+
+  sudo nano /etc/apache2/sites-available/office.conf
+
 Add the following lines in this file:
+
 ::
-<VirtualHost *:80>
-ServerName office.mydomain.com
 
-RewriteEngine on
-RewriteCond %{SERVER_NAME} =office.mydomain.com
-RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
-
-</VirtualHost>
-
+  <VirtualHost *:80>
+  ServerName office.mydomain.com
+  
+  RewriteEngine on
+  RewriteCond %{SERVER_NAME} =office.mydomain.com
+  RewriteRule ^ https://%{SERVER_NAME}%{REQUEST_URI} [END,NE,R=permanent]
+  
+  </VirtualHost>
+  
 Enable this virtual host:
+
 ::
-    a2ensite office.conf
-    service apache2 reload
+
+  a2ensite office.conf
+  service apache2 reload
 
 Create the SSL version with certbot:
 
-`sudo certbot --apache -d office.mydomain.com
+::
 
-This will automatically create /etc/apache2/sites-available/office-le-ssl.conf. Edit this file
-sudo nano /etc/apache2/sites-available/office-le-ssl.conf
-And add, at the end of the <VirtualHost> section:
+  sudo certbot --apache -d office.mydomain.com
 
-SetEnvIf Host "^(.*)$" THE_HOST=$1
-RequestHeader setifempty X-Forwarded-Proto https
-RequestHeader setifempty X-Forwarded-Host %{THE_HOST}e
-ProxyAddHeaders Off
-ProxyPass /.well-known !
-ProxyPassMatch (.*)(\/websocket)$ "ws://127.0.0.1:8006/$1$2"
-ProxyPass / http://127.0.0.1:8006/
-ProxyPassReverse / http://127.0.0.1:8006/
+This will automatically create :file:`/etc/apache2/sites-available/office-le-ssl.conf`. Edit this file
+
+::
+
+  sudo nano /etc/apache2/sites-available/office-le-ssl.conf
+
+And add, at the end of the **<VirtualHost>** section:
+
+::
+
+  SetEnvIf Host "^(.*)$" THE_HOST=$1
+  RequestHeader setifempty X-Forwarded-Proto https
+  RequestHeader setifempty X-Forwarded-Host %{THE_HOST}e
+  ProxyAddHeaders Off
+  ProxyPass /.well-known !
+  ProxyPassMatch (.*)(\/websocket)$ "ws://127.0.0.1:8006/$1$2"
+  ProxyPass / http://127.0.0.1:8006/
+  ProxyPassReverse / http://127.0.0.1:8006/
 
 
 Enable this site:
-    a2ensite office-le-ssl.conf
-    service apache2 reload
+
+::
+
+  a2ensite office-le-ssl.conf
+  service apache2 reload
 
 3. Set the DNS
 Let your system know that office.mydomain.com is itself:

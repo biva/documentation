@@ -105,7 +105,7 @@ and add/modify the first line to have something like this:
 
 ::
 
-127.0.0.1 localhost nextcloud.mydomain.com office.mydomain.com
+  127.0.0.1 localhost nextcloud.mydomain.com office.mydomain.com
 
 Save and exit
 
@@ -140,10 +140,11 @@ Visit https://office.zem.bo/healthcheck: it should show "true"
 
 
 Additional optional steps
-
+-------------------------
 From previous attempts of installation, I had also done the following steps, but I'm not sure if they are required or not.
 
 ::
+
   sudo nano /var/www/html/nextcloud/config/config.php
 
 Modify the file so that it includes:
@@ -153,16 +154,19 @@ Modify the file so that it includes:
   'trusted_domains' =>
     array (
       4 => 'office.zem.bo',
-	  * 
+    ),
+    
+and also the following:
 
-config.php of NC
+::
 
+  'allow_local_remote_servers' => true,
+    'onlyoffice' =>
+    array (
+      'verify_peer_off' => true,
+    ),
 
-'allow_local_remote_servers' => true,
-  'onlyoffice' =>
-  array (
-    'verify_peer_off' => true,
-  ),
+Credits
+-------
 
-5. Credits
 These steps are largely inspired by https://help.nextcloud.com/t/howto-what-to-do-for-having-nextcloud-onlyoffice-on-the-same-host/33192 and https://arnowelzel.de/en/onlyoffice-in-nextcloud-the-current-status

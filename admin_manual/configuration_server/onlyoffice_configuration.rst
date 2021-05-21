@@ -92,39 +92,69 @@ Enable this site:
   a2ensite office-le-ssl.conf
   service apache2 reload
 
-3. Set the DNS
-Let your system know that office.mydomain.com is itself:
-sudo nano /etc/hosts
+Set the DNS
+-----------
+
+Let your system know that **office.mydomain.com** is itself:
+
+::
+
+  sudo nano /etc/hosts
+
 and add/modify the first line to have something like this:
+
+::
+
 127.0.0.1 localhost nextcloud.mydomain.com office.mydomain.com
+
 Save and exit
 
-3. Get the docker image
-docker pull onlyoffice/documentserver
-And launch the docker image (you can adapt "secret-key" and the port as you want)
-sudo docker run -i -t -d --name="onlyoffice" -p 127.0.0.1:8006:80 --restart=always -e JWT_ENABLED="true" -e JWT_SECRET="secret-key" onlyoffice/documentserver
+Get the docker image
+--------------------
 
-4. Install the connector on Nextcloud
-Within Nextcloud apps (https://nextcloud.mydomain.com/settings/apps/), install and enable the app ONLYOFFICE
+::
+
+  docker pull onlyoffice/documentserver
+
+And launch the docker image (you can adapt "secret-key" and the port as you want)
+
+::
+
+  sudo docker run -i -t -d --name="onlyoffice" -p 127.0.0.1:8006:80 --restart=always -e JWT_ENABLED="true" -e JWT_SECRET="secret-key" onlyoffice/documentserver
+
+Install the connector on Nextcloud
+----------------------------------
+
+Within Nextcloud apps (https://nextcloud.mydomain.com/settings/apps/), install and enable the app ONLYOFFICE.
 
 Configure this app within the Settings (https://nextcloud.mydomain.com/settings/admin/onlyoffice)
-Address: office.mydomain.com
-Secret key: secret-key
-And click Save.
 
-5. Check status and test it
+- Address: office.mydomain.com
+- Secret key: secret-key
+- Click Save
+
+Check status and test it
+------------------------
+
 Visit https://office.zem.bo/healthcheck: it should show "true"
 
 
-6. Additional optional steps
+Additional optional steps
 
-From previous attempts, I had also done this: not sure if it's required or not.
-sudo nano /var/www/html/nextcloud/config/config.php
+From previous attempts of installation, I had also done the following steps, but I'm not sure if they are required or not.
 
-'trusted_domains' =>
-  array (
-    4 => 'office.zem.bo',
-	* 
+::
+  sudo nano /var/www/html/nextcloud/config/config.php
+
+Modify the file so that it includes:
+
+::
+
+  'trusted_domains' =>
+    array (
+      4 => 'office.zem.bo',
+	  * 
+
 config.php of NC
 
 

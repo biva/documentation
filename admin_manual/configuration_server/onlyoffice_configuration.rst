@@ -153,7 +153,7 @@ Modify the file so that it includes:
 
   'trusted_domains' =>
     array (
-      4 => 'office.mydomain.bo',
+      4 => 'office.mydomain.com',
     ),
     
 and also the following:

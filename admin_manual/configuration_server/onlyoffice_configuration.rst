@@ -136,7 +136,7 @@ Configure this app within the Settings (https://nextcloud.mydomain.com/settings/
 Check status and test it
 ------------------------
 
-Visit https://office.zem.bo/healthcheck: it should show "true"
+Visit https://office.mydomain.com/healthcheck: it should show "true"
 
 
 Additional optional steps
@@ -153,7 +153,7 @@ Modify the file so that it includes:
 
   'trusted_domains' =>
     array (
-      4 => 'office.zem.bo',
+      4 => 'office.mydomain.bo',
     ),
     
 and also the following:

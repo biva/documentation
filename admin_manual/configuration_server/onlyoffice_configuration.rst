@@ -166,7 +166,9 @@ and also the following:
       'verify_peer_off' => true,
     ),
 
-Credits
--------
+Credits and other installations possibilities
+---------------------------------------------
 
 These steps are largely inspired by https://help.nextcloud.com/t/howto-what-to-do-for-having-nextcloud-onlyoffice-on-the-same-host/33192 and https://arnowelzel.de/en/onlyoffice-in-nextcloud-the-current-status
+
+OnlyOffice's team published a different method but it requires a clean installation: https://github.com/ONLYOFFICE/docker-onlyoffice-nextcloud/tree/feature/ssl
